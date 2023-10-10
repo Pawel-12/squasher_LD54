@@ -11,7 +11,13 @@ set(SDL2_LIB_DIR C:/SDL2_64/lib)
 include_directories(${SDL2_INCLUDE_DIR})
 link_directories(${SDL2_LIB_DIR})
 
-add_executable(squasher_LD54 main.cpp Wall.cpp)
+file(
+        GLOB SOURCES LIST_DIRECTORIES false
+        ${CMAKE_CURRENT_LIST_DIR}/*.cpp
+
+)
+
+add_executable(squasher_LD54 ${SOURCES})
 
 set_target_properties(squasher_LD54 PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/bin")
 

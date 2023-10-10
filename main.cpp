@@ -2,50 +2,61 @@
 #include <vector>
 #include <cmath>
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+
+#include "Window.h"
+#include "Sprite.h"
 #include "Wall.h"
+#include "Player.h"
+
+const unsigned int WW = 1280;
+const unsigned int WH = 800;
 
 int main(int argc, char* argv[]) {
 
     srand(time(NULL));
 
-    SDL_Renderer * render = nullptr;
-    SDL_Window * window = nullptr;
+    Window window{WW,WH};
 
-    if(!setup_SDL(&window, &render))
+    if((window.getRend() == nullptr) || (window.getWin() == nullptr))
         return 1;
 
-    nextlvl:
-    Sprite widla("widlav2.png",render);
-    Sprite widla2("widla2v2.png",render);
-    Sprite background("backgroundsq.png",render);
-    Sprite dynia("dynia.png",render);
+
+    Sprite forkLeft("widlav2.png",window.getRend());
+    Sprite forkRight("widla2v2.png",window.getRend());
+    Sprite background("backgroundsq.png",window.getRend());
+    Sprite dynia("dynia.png",window.getRend());
+
 
     std::vector<Wall> left;
     std::vector<Wall> right;
-    static int level = 1;
-    static int speed = 100;
-    static float wallscount = 8;
 
-    SDL_WarpMouseInWindow(window,640,400);
+    int level = 1;
+    int wallSpeed = 100;
+    float wallCount = 8;
 
-    for(int i = 0; i < wallscount; i++)
+    nextlvl:
+    SDL_WarpMouseInWindow(window.getWin(),640,400);
+    
+    float wallHeight = ceilf(WH/wallCount);
+    Size wallSize = {50,wallHeight};
+
+    for(int i = 0; i < wallCount; i++)
     {
-        left.push_back({{0,(i/wallscount)*WINDOWHEIGHT},{50, ceilf(WINDOWHEIGHT/wallscount)},widla.img,render,speed});
-        right.push_back({{1230,(i/wallscount)*WINDOWHEIGHT},{50,ceilf(WINDOWHEIGHT/wallscount)},widla2.img,render,speed});
+        left.push_back({{0,i*wallHeight}, wallSize, &forkLeft, &window, wallSpeed});
+        right.push_back({{1230,i*wallHeight}, wallSize, &forkRight, &window, wallSpeed});
     }
-    int space = rand()%(static_cast<int>(2*wallscount-1));
 
-    if(space >= wallscount)
-        right.erase(right.begin() + space%static_cast<int>(wallscount));
+    int space = rand()%(static_cast<int>(2*wallCount-1));
+
+    if(space >= wallCount)
+        right.erase(right.begin() + space % static_cast<int>(wallCount));
     else
         left.erase(left.begin() + space);
 
-    Player player({620,380},dynia.img, render);
+    Player player({620,380}, &dynia, &window);
 
     SDL_Event e;
     bool quit = false;
-    //float jumptimer = 0;
 
     unsigned int start_time = SDL_GetTicks();                                                       // get start time
     while (!quit){
@@ -97,33 +108,40 @@ int main(int argc, char* argv[]) {
 
 */
         SDL_Rect rect (0,0, 1280, 800);                            // create rect with size of sprite
-        SDL_RenderCopy(render, background.img, nullptr, &rect);
+        SDL_RenderCopy(window.getRend(), background.getTexture(), nullptr, &rect);
 
         int moving = 0;
 
         float delta = (SDL_GetTicks() - start_time)/1000.0;
         for(auto& wall : left)
         {
-            if(wall.getCords().x + wall.getSize().w < (WINDOWWIDTH/2))
+            if(wall.getCords().x + wall.getSize().w < (WW/2))
             {
                 wall.moveX(delta * wall.getSpeed());
                 moving = 1;
             }
 
             if(wall.col(player,delta))
+            {
+                SDL_Delay(1000);
                 return 3;
+            }
+
             }
 
         for(auto& wall : right)
         {
-            if(wall.getCords().x > (WINDOWWIDTH/2))
+            if(wall.getCords().x > (WW/2))
             {
                 wall.moveX2(delta * wall.getSpeed());
                 moving = 1;
             }
 
             if(wall.col(player,delta))
+            {
+                SDL_Delay(1000);
                 return 3;
+            }
 
         }
 
@@ -131,10 +149,10 @@ int main(int argc, char* argv[]) {
         {
             right.clear();
             left.clear();
-            if(wallscount < 12)
-                wallscount += 2;
+            if(wallCount < 12)
+                wallCount += 2;
             else
-                speed += 25;
+                wallSpeed += 25;
             level++;
             std::cout <<"Level nr. "<< level <<"\n";
 
@@ -204,16 +222,6 @@ int main(int argc, char* argv[]) {
         }
 */
 
-        SDL_SetRenderDrawColor(render,0,255,0,0);
-
-        //SDL_Rect rect(50,50,50,50);
-        //SDL_RenderFillRect(render, &rect);
-        //SDL_RenderDrawRect(render, &rect);
-
-        //SDL_RenderDrawLine(render,640,0,640,800);
-
-        SDL_SetRenderDrawColor(render,0,0,0,0);
-
 
         player.draw();
 
@@ -224,8 +232,8 @@ int main(int argc, char* argv[]) {
             wall.draw();
 
 
-        SDL_RenderPresent(render);
-        SDL_RenderClear(render);
+        SDL_RenderPresent(window.getRend());
+        SDL_RenderClear(window.getRend());
 
 
         auto temp = SDL_GetTicks();
@@ -237,8 +245,5 @@ int main(int argc, char* argv[]) {
         start_time = temp;
     }
 
-
-
-    close_SDL(&window, &render);
     return 0;
 }
