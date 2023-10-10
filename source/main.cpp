@@ -21,10 +21,10 @@ int main(int argc, char* argv[]) {
         return 1;
 
 
-    Sprite forkLeft("widlav2.png",window.getRend());
-    Sprite forkRight("widla2v2.png",window.getRend());
-    Sprite background("backgroundsq.png",window.getRend());
-    Sprite dynia("dynia.png",window.getRend());
+    Sprite forkLeft("../data/forkleft.png",window.getRend());
+    Sprite forkRight("../data/forkright.png",window.getRend());
+    Sprite background("../data/backgroundsq.png",window.getRend());
+    Sprite dynia("../data/dynia.png",window.getRend());
 
 
     std::vector<Wall> left;

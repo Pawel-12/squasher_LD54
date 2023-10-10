@@ -13,7 +13,7 @@ link_directories(${SDL2_LIB_DIR})
 
 file(
         GLOB SOURCES LIST_DIRECTORIES false
-        ${CMAKE_CURRENT_LIST_DIR}/*.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/source/*.cpp
 
 )
 
