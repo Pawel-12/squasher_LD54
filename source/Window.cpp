@@ -41,7 +41,14 @@ Window::Window(unsigned int ww, unsigned int wh): WINDOWWIDTH(ww), WINDOWHEIGHT(
         //Initialize SDL_image subsystems
         if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG)
         {
-            std::cout<<"IMG_INIT: "<<IMG_GetError()<<std::endl;
+            std::cout <<"IMG_INIT: " << IMG_GetError() << std::endl;
+            return;
+        }
+
+        //Initialize SDL_ttf
+        if(TTF_Init() < 0)
+        {
+            std::cout << "SDL_ttf could not initialize! SDL_ttf Error: " << TTF_GetError() << std::endl;
             return;
         }
     }
@@ -63,6 +70,8 @@ Window::~Window()
 
     //Quit SDL subsystems
     SDL_Quit();
+
+    TTF_Quit();
 }
 
 unsigned int Window::getWidth()const

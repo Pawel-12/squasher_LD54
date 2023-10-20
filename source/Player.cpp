@@ -6,10 +6,12 @@ Player::Player(const Cords & loc, Sprite * sprite_ptr, Window * win_ptr)
     int width = 0;
     int height = 0;
 
-    // get the size of texture
-    SDL_QueryTexture(sprite->getTexture(),nullptr ,nullptr , &width, &height);
-    size.w = width;
-    size.h = height;
+    if(sprite != nullptr) {
+        // get the size of texture
+        SDL_QueryTexture(sprite->getTexture(), nullptr, nullptr, &width, &height);
+        size.w = width;
+        size.h = height;
+    }
 }
 
 void Player::draw()const

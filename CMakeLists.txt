@@ -21,4 +21,4 @@ add_executable(squasher_LD54 ${SOURCES})
 
 set_target_properties(squasher_LD54 PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/bin")
 
-target_link_libraries(squasher_LD54 mingw32 SDL2main SDL2 SDL2_image zlib1)
+target_link_libraries(squasher_LD54 mingw32 SDL2main SDL2 SDL2_image SDL2_ttf zlib1)

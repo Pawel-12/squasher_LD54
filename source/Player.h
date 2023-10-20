@@ -13,11 +13,10 @@
 class Player
 {
 private:
-    Cords location;
-    Size size;
+    Cords location{0,0};
+    Size size{0,0};
     Sprite * sprite = nullptr;
     Window * window = nullptr;
-    bool airborne = false;
 public:
     Player(const Cords & loc, Sprite * sprite_ptr, Window * win_ptr);
     ~Player() = default;
@@ -36,6 +35,4 @@ public:
     Cords getCords()const;
     void setCords(const Cords & cords);
     Size getSize()const;
-    bool isAirborne()const{return airborne;}
-    void setAirborne(bool air){ airborne = air;}
 };

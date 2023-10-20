@@ -2,9 +2,9 @@
 
 Sprite::Sprite(const char * path, SDL_Renderer * render)
 {
-    textSDL = IMG_LoadTexture(render, path);
+    textureSDL = IMG_LoadTexture(render, path);
 
-    if (textSDL == nullptr){
+    if (textureSDL == nullptr){
         std::cout << "IMG_LoadTexture: "<< IMG_GetError() << std::endl;
 
         //If nullptr try loading image using SDL_Surface
@@ -16,11 +16,33 @@ Sprite::Sprite(const char * path, SDL_Renderer * render)
         }
 
         // Upload surface to renderer, and then, free the surface
-        textSDL = SDL_CreateTextureFromSurface(render, sprite);
+        textureSDL = SDL_CreateTextureFromSurface(render, sprite);
         
         SDL_FreeSurface(sprite);
 
-        if (textSDL == nullptr){
+        if (textureSDL == nullptr){
+            logSDLError("SDL_CreateTextureFromSurface Error: ");
+            return;
+        }
+    }
+}
+
+Sprite::Sprite(TTF_Font * font, const char * text, const SDL_Color & color, SDL_Renderer * render)
+{
+    SDL_Surface * textSurface = TTF_RenderUTF8_Blended(font, text, color);
+
+    if (textSurface == nullptr)
+    {
+        std::cout << "Unable to render text surface! SDL_ttf Error: " << TTF_GetError() << '\n';
+        return;
+    }
+    else
+    {
+        textureSDL = SDL_CreateTextureFromSurface(render, textSurface);
+
+        SDL_FreeSurface(textSurface);
+
+        if (textureSDL == nullptr){
             logSDLError("SDL_CreateTextureFromSurface Error: ");
             return;
         }
@@ -29,11 +51,20 @@ Sprite::Sprite(const char * path, SDL_Renderer * render)
 
 Sprite::~Sprite()
 {
-    SDL_DestroyTexture(textSDL);
-    textSDL = nullptr;
+    SDL_DestroyTexture(textureSDL);
+    textureSDL = nullptr;
+}
+
+Sprite & Sprite::operator=(Sprite && other)
+{
+    this->~Sprite();
+    textureSDL = other.textureSDL;
+    other.textureSDL = nullptr;
+
+    return *this;
 }
 
 SDL_Texture * Sprite::getTexture()
 {
-    return textSDL;
+    return textureSDL;
 }
