@@ -87,17 +87,17 @@ TickValue Level::Tick()
 
     const Uint8* currentKeyStates = SDL_GetKeyboardState(nullptr);
 
-    if(currentKeyStates[SDL_SCANCODE_A])
+    if(currentKeyStates[SDL_SCANCODE_A] || currentKeyStates[SDL_SCANCODE_LEFT])
         moveX = -1;
-    else if (currentKeyStates[SDL_SCANCODE_D])
+    else if (currentKeyStates[SDL_SCANCODE_D] || currentKeyStates[SDL_SCANCODE_RIGHT])
         moveX = 1;
     else
         moveX = 0;
 
 
-    if(currentKeyStates[SDL_SCANCODE_W])
+    if(currentKeyStates[SDL_SCANCODE_W] || currentKeyStates[SDL_SCANCODE_UP])
         moveY = -1;
-    else if (currentKeyStates[SDL_SCANCODE_S])
+    else if (currentKeyStates[SDL_SCANCODE_S] || currentKeyStates[SDL_SCANCODE_DOWN])
         moveY = 1;
     else
         moveY = 0;
