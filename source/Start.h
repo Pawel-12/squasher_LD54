@@ -19,6 +19,7 @@ private:
     std::unique_ptr<Sprite> startscreen;
     Uint32 start_time = 0;
     TTF_Font * font = nullptr;
+    std::unique_ptr<Sprite> textSprite;
 public:
     Start(Window & win);
     virtual ~Start();

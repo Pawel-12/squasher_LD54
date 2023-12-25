@@ -31,6 +31,7 @@ private:
     float speedModX = 100;
     float speedModY = 100;
     TTF_Font * font = nullptr;
+    static std::fstream hsfile;
     void createWalls();
     void createPlayer();
 public:

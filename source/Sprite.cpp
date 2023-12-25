@@ -29,7 +29,7 @@ Sprite::Sprite(const char * path, SDL_Renderer * render)
 
 Sprite::Sprite(TTF_Font * font, const char * text, const SDL_Color & color, SDL_Renderer * render)
 {
-    SDL_Surface * textSurface = TTF_RenderUTF8_Blended(font, text, color);
+    SDL_Surface * textSurface = TTF_RenderUTF8_Blended_Wrapped(font, text, color, 0);
 
     if (textSurface == nullptr)
     {

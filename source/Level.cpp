@@ -1,4 +1,7 @@
+#include <fstream>
 #include "Level.h"
+
+std::fstream Level::hsfile;
 
 void Level::createWalls()
 {
@@ -34,6 +37,11 @@ Level::Level(Window & win, unsigned int winwidth, unsigned int winheight) : wind
 {
     font = TTF_OpenFont("../data/ChakraPetch-Bold.ttf", 100);
 
+    hsfile.open("highscore.txt", std::ios::in);
+
+    if(!hsfile)
+        std::cout << "Error while opening file\n";
+
     createPlayer();
     createWalls();
     start_time = SDL_GetTicks();
@@ -42,6 +50,24 @@ Level::Level(Window & win, unsigned int winwidth, unsigned int winheight) : wind
 Level::~Level()
 {
     TTF_CloseFont(font);
+
+    int temp = 0;
+    if(!hsfile.eof())
+        hsfile >> temp;
+
+    if(level > temp)
+    {
+        hsfile.close();
+        hsfile.open("highscore.txt", std::ios::out | std::ios::trunc);
+
+        if(hsfile)
+            hsfile << level;
+        else
+            std::cout << "Error while opening file\n";
+
+        std::cout << "New highscore = " << level << '\n';
+    }
+    hsfile.close();
 }
 
 TickValue Level::Tick()
